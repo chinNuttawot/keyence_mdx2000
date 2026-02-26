@@ -13,6 +13,8 @@ from dataclasses import asdict
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 import config
 from keyence_client import MarkingData, KeyenceStatus
@@ -74,6 +76,9 @@ class APIClient:
         session.mount("http://", adapter)
         session.mount("https://", adapter)
         
+        # Disable SSL verification for internal servers with self-signed certificates
+        session.verify = False
+        
         return session
     
     def _get_headers(self) -> Dict[str, str]:
@@ -90,6 +95,10 @@ class APIClient:
             headers["X-API-Key"] = self.api_key
             # headers["Authorization"] = f"Bearer {self.api_key}"
             # headers["Authorization"] = f"Basic {self.api_key}"
+        
+        # Device JWT token for protected endpoints (e.g., /api/injection/scan)
+        if getattr(config, 'AUTH_TOKEN', '') and config.AUTH_TOKEN:
+            headers["Authorization"] = f"Bearer {config.AUTH_TOKEN}"
         
         return headers
     
