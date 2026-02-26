@@ -230,15 +230,15 @@ class APIClient:
             APIClientError: If API request fails
         """
         endpoint = config.PRODUCTION_ORDERS_API
-        payload = {"isDateTimeNow": True}
+        params = {"isDateTimeNow": "true"}
         
         self.logger.info(f"Requesting production order from: {endpoint}")
-        self.logger.debug(f"Payload: {json.dumps(payload)}")
+        self.logger.debug(f"Params: {params}")
         
         try:
-            response = self._session.post(
+            response = self._session.get(
                 endpoint,
-                json=payload,
+                params=params,
                 headers=self._get_headers(),
                 timeout=self.timeout
             )
