@@ -192,16 +192,16 @@ def read_and_send_once(
                     return marking_data
                 
                 prod_order = orders[0]
-                logger.info(f"Using production order: {prod_order.get('production_order_no', 'N/A')}")
+                logger.info(f"Using production order: {prod_order.get('orderNo', 'N/A')}")
                 
                 # 2. Prepare Injection Scan Payload
                 scan_payload = {
-                    "productionOrderNo": prod_order.get("production_order_no", ""),
-                    "modelCode": prod_order.get("model_code", ""),
+                    "productionOrderNo": prod_order.get("orderNo", ""),
+                    "modelCode": prod_order.get("modelCode", ""),
                     "productSerialNumber": marking_data.marking_text,
                     "partCount": 1,
                     "partStatus": "OK",
-                    "createdBy": prod_order.get("created_by", config.USER_ID),
+                    "createdBy": config.USER_ID,
                     "deviceName": config.DEVICE_NAME,
                     "stationName": config.STATION_NAME,
                     "deviceId": config.DEVICE_ID
@@ -309,12 +309,12 @@ def run_continuous(
                         
                         # 2. Prepare Injection Scan Payload
                         scan_payload = {
-                            "productionOrderNo": prod_order.get("production_order_no", ""),
-                            "modelCode": prod_order.get("model_code", ""),
+                            "productionOrderNo": prod_order.get("orderNo", ""),
+                            "modelCode": prod_order.get("modelCode", ""),
                             "productSerialNumber": marking_data.marking_text,
                             "partCount": 1,
                             "partStatus": "OK",
-                            "createdBy": prod_order.get("created_by", config.USER_ID),
+                            "createdBy": config.USER_ID,
                             "deviceName": config.DEVICE_NAME,
                             "stationName": config.STATION_NAME,
                             "deviceId": config.DEVICE_ID
