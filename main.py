@@ -182,29 +182,26 @@ def read_and_send_once(
             try:
                 # 1. Get Production Order
                 logger.info("1. Fetching current production order...")
-                prod_order = api.get_current_production_order()
-                logger.debug(f"Production Order: {prod_order}")
+                api_response = api.get_current_production_order()
+                logger.debug(f"Production Order Response: {api_response}")
+                
+                # Extract first order from response data array
+                orders = api_response.get("data", [])
+                if not orders:
+                    logger.error("No active production order found for today")
+                    return marking_data
+                
+                prod_order = orders[0]
+                logger.info(f"Using production order: {prod_order.get('production_order_no', 'N/A')}")
                 
                 # 2. Prepare Injection Scan Payload
-                # Map fields as requested:
-                # {
-                #     "productionOrderNo": "...",      <-- from Production Order API
-                #     "modelCode": "...",              <-- from Production Order API
-                #     "productSerialNumber": "...",    <-- from Keyence (marking_text)
-                #     "partCount": 1,                  <-- Fixed
-                #     "partStatus": "OK",              <-- Fixed
-                #     "createdBy": ...,                <-- from Production Order API or Config
-                #     "deviceName": "...",             <-- from Config
-                #     "deviceId": ...                  <-- from Config
-                # }
-                
                 scan_payload = {
-                    "productionOrderNo": prod_order.get("productionOrderNo", ""),
-                    "modelCode": prod_order.get("modelCode", ""),
+                    "productionOrderNo": prod_order.get("production_order_no", ""),
+                    "modelCode": prod_order.get("model_code", ""),
                     "productSerialNumber": marking_data.marking_text,
                     "partCount": 1,
                     "partStatus": "OK",
-                    "createdBy": prod_order.get("createdBy", config.USER_ID),
+                    "createdBy": prod_order.get("created_by", config.USER_ID),
                     "deviceName": config.DEVICE_NAME,
                     "stationName": config.STATION_NAME,
                     "deviceId": config.DEVICE_ID
@@ -300,17 +297,26 @@ def run_continuous(
                     try:
                         # 1. Get Production Order
                         logger.info("Fetching production order...")
-                        prod_order = api.get_current_production_order()
+                        api_response = api.get_current_production_order()
+                        
+                        # Extract first order from response data array
+                        orders = api_response.get("data", [])
+                        if not orders:
+                            logger.error("No active production order found for today")
+                            continue
+                        
+                        prod_order = orders[0]
                         
                         # 2. Prepare Injection Scan Payload
                         scan_payload = {
-                            "productionOrderNo": prod_order.get("productionOrderNo", ""),
-                            "modelCode": prod_order.get("modelCode", ""),
+                            "productionOrderNo": prod_order.get("production_order_no", ""),
+                            "modelCode": prod_order.get("model_code", ""),
                             "productSerialNumber": marking_data.marking_text,
                             "partCount": 1,
                             "partStatus": "OK",
-                            "createdBy": prod_order.get("createdBy", config.USER_ID),
+                            "createdBy": prod_order.get("created_by", config.USER_ID),
                             "deviceName": config.DEVICE_NAME,
+                            "stationName": config.STATION_NAME,
                             "deviceId": config.DEVICE_ID
                         }
                         
