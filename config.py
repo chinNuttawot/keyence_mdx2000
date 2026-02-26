@@ -15,7 +15,7 @@ API_ENDPOINT = "http://your-api-endpoint.com/api/marking-data"  # Legacy/Default
 PRODUCTION_ORDERS_API = "http://192.168.1.100:3000/api/production-orders/"
 INJECTION_SCAN_API = "http://192.168.1.100:3000/api/injection/scan"
 API_KEY = ""                   # Optional: API key for authentication
-AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW4iLCJpYXQiOjE3NzIxMDA4MjZ9.VNLNRe2PJlMnGqi4A_6spKMvHi7Q4trEcWM1rFnKZ3s"                # Device JWT token (generated from BE scripts/generate-device-token.ts)
+AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW4iLCJpYXQiOjE3NzIxMDU0NTd9.pBReG_96ufZDKUWx_ArW9VJ7whbJEW05v9Mh85uPqLc"                # Device JWT token (generated from BE scripts/generate-device-token.ts)
 API_TIMEOUT = 30               # API request timeout in seconds
 
 # Device Configuration (for API Payloads)
