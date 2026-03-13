@@ -194,10 +194,18 @@ def read_and_send_once(
                 prod_order = orders[0]
                 logger.info(f"Using production order: {prod_order.get('orderNo', 'N/A')}")
                 
+                # Extract material code from nested items if available
+                model_code_val = prod_order.get("modelCode", "")
+                prod_items = prod_order.get("productionOrderItems", [])
+                if prod_items and isinstance(prod_items, list) and len(prod_items) > 0:
+                    material_master = prod_items[0].get("materialMaster", {})
+                    if material_master and material_master.get("code"):
+                        model_code_val = material_master.get("code")
+
                 # 2. Prepare Injection Scan Payload
                 scan_payload = {
                     "productionOrderNo": prod_order.get("orderNo", ""),
-                    "modelCode": prod_order.get("modelCode", ""),
+                    "modelCode": model_code_val,
                     "productSerialNumber": marking_data.marking_text,
                     "partCount": 1,
                     "partStatus": "OK",
@@ -307,10 +315,18 @@ def run_continuous(
                         
                         prod_order = orders[0]
                         
+                        # Extract material code from nested items if available
+                        model_code_val = prod_order.get("modelCode", "")
+                        prod_items = prod_order.get("productionOrderItems", [])
+                        if prod_items and isinstance(prod_items, list) and len(prod_items) > 0:
+                            material_master = prod_items[0].get("materialMaster", {})
+                            if material_master and material_master.get("code"):
+                                model_code_val = material_master.get("code")
+
                         # 2. Prepare Injection Scan Payload
                         scan_payload = {
                             "productionOrderNo": prod_order.get("orderNo", ""),
-                            "modelCode": prod_order.get("modelCode", ""),
+                            "modelCode": model_code_val,
                             "productSerialNumber": marking_data.marking_text,
                             "partCount": 1,
                             "partStatus": "OK",
