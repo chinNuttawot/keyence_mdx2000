@@ -263,7 +263,8 @@ class APIClient:
         """
         endpoint = config.INJECTION_SCAN_API
         
-        self.logger.info(f"Sending injection scan data to: {endpoint}")
+        self.logger.info(f"==> POST {endpoint}")
+        self.logger.debug(f"==> Payload: {json.dumps(scan_data, indent=2)}")
         
         try:
             response = self._session.post(
@@ -276,6 +277,7 @@ class APIClient:
             response.raise_for_status()
             result = response.json() if response.content else {}
             self.logger.info(f"Injection scan sent successfully: {response.status_code}")
+            self.logger.debug(f"<== Response [{response.status_code}]: {json.dumps(result, indent=2)}")
             return result
             
         except requests.exceptions.RequestException as e:

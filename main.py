@@ -15,6 +15,7 @@ Usage:
     python main.py --test-connection  # Test connection only
 """
 
+import json
 import argparse
 import logging
 import sys
@@ -338,9 +339,9 @@ def run_continuous(
                         
                         # 3. Send Scan
                         logger.info("Sending injection scan...")
-                        logger.debug(f"Scan Payload: {scan_payload}")
+                        logger.info(f"==> Scan Payload: {json.dumps(scan_payload, indent=2)}")
                         response = api.send_injection_scan(scan_payload)
-                        logger.info(f"Scan sent successfully. Response: {response}")
+                        logger.info(f"<== Scan success. DB Response: {json.dumps(response, indent=2)}")
                         
                     except APIClientError as e:
                         logger.error(f"API Transaction Error: {e}")
