@@ -345,6 +345,11 @@ class KeyenceMDX2000:
                         # For now, keeping it simple to just S009 as requested.
                         break
             
+            # Validation: Ensure we read all configured blocks
+            if not is_auto_detect and len(all_text) != len(blocks_to_scan):
+                self.logger.warning(f"Incomplete read: Configured to read {len(blocks_to_scan)} blocks, but only got {len(all_text)}. Discarding marking data to prevent partial scans.")
+                return "", []
+
             self.logger.info(f"Read marking text from {len(all_text)} blocks")
             # Sort by block number to ensure correct order
             all_text.sort(key=lambda x: x["block"])
